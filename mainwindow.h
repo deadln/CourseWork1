@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    inline void rewrite_data();
 
 signals:
     void sendVacList(QMap<QString, Vacancy> m);

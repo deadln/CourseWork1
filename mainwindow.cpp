@@ -5,12 +5,23 @@
 #include <cstdlib>
 #include <ctime>
 
+const QString FILE_NAME("data.bin");
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    qDebug() << "test";
+    //Загрузка данных из файла
+    QFile file(FILE_NAME);
+    QDataStream stream(&file);
+    file.open(QIODevice::ReadOnly);
+    stream >> vacancies;
+    //Заполнение списка в окне
+    for(QMap<QString, Vacancy>::const_iterator i = vacancies.constBegin(); i != vacancies.constEnd(); i++)
+    {
+        ui->listWidget_2->addItem(i.key());
+    }
 
     connect(&addvacancy, SIGNAL(sendVacancy(Vacancy)), this, SLOT(addVac(Vacancy)));
     connect(&addapplicant, SIGNAL(sendApplicant(Applicant)), this, SLOT(addApp(Applicant)));
@@ -20,7 +31,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    rewrite_data();
     delete ui;
+}
+
+//Перезапись данных
+inline void MainWindow::rewrite_data()
+{
+    QFile file(FILE_NAME);
+    QDataStream stream(&file);
+    file.open(QIODevice::WriteOnly);
+    stream << vacancies;
 }
 
 void MainWindow::on_action_triggered()
@@ -70,6 +91,8 @@ void MainWindow::addVac(Vacancy v)
          }
 
      }
+
+     rewrite_data();
 }
 
 //Добавление кандидата в систему
@@ -134,8 +157,11 @@ void MainWindow::on_DelVac_clicked()
         vacancies.remove(ui->listWidget_2->currentItem()->text());
         ui->listWidget_2->takeItem(ui->listWidget_2->currentRow());
     }
+
+    rewrite_data();
 }
 
+//Вывод данных о кандидате
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
     if(current == nullptr)
