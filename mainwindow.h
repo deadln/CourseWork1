@@ -9,6 +9,7 @@
 #include <QString>
 #include <QMap>
 #include <QListWidgetItem>
+#include "addapplicant.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void sendVacList(QMap<QString, Vacancy> m);
+
 private slots:
     void on_action_triggered();
 
@@ -33,12 +37,19 @@ private slots:
 
     void addVac(Vacancy v);
 
+    void addApp(Applicant a);
+
     void on_listWidget_2_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
+    void on_DelVac_clicked();
+
+    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
     Ui::MainWindow *ui;
 
     AddVacancy addvacancy;
+    AddApplicant addapplicant;
 
     QMap<QString , Applicant> applicants;
     QMap<QString , Vacancy> vacancies;

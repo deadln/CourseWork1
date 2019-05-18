@@ -13,8 +13,8 @@ class Vacancy
 public:
     Vacancy() {name = ""; id = "";}
     Vacancy(QString n, QString i) {name = n; id = i;}
-    QString getName();
-    QString getId();
+    QString getVacancyName(){return name;}
+    QString getId(){return id;}
 };
 
 #endif // VACANCY_H

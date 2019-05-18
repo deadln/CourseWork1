@@ -16,7 +16,15 @@ class Person
     QString activity;
 public:
     Person();
-    Person(QString s, QString n, QString p, int d, int m, int y,QString se, QString e, QString a);
+    Person(QString s, QString n, QString p, QDate b,QString se, QString e, QString a);
+    QString getSurname() {return surname; }
+    QString getName() {return name; }
+    QString getPatronimic() {return patronimic; }
+    QDate getbday() {return bday; }
+    QString getSex() {return sex; }
+    QString getEducation() {return education; }
+    QString getActivity() {return activity; }
+
 };
 
 #endif // PERSON_H

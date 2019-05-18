@@ -7,7 +7,6 @@ AddVacancy::AddVacancy(QWidget *parent) :
     ui(new Ui::AddVacancy)
 {
     ui->setupUi(this);
-    //connect(this, SIGNAL(accepted()), this, SLOT(on_buttonBox_accepted()));
 }
 
 AddVacancy::~AddVacancy()
@@ -17,14 +16,14 @@ AddVacancy::~AddVacancy()
 
 void AddVacancy::on_buttonBox_rejected()
 {
-
+    ui->lineEdit->setText("");
+    ui->lineEdit_2->setText("");
 }
 
 void AddVacancy::on_buttonBox_accepted()
 {
     Vacancy v(ui->lineEdit->text(), ui->lineEdit_2->text());
     emit sendVacancy(v);
-    qDebug() << "Sended: " << v.getName() << " " << v.getId();
     ui->lineEdit->setText("");
     ui->lineEdit_2->setText("");
 

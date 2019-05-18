@@ -154,6 +154,15 @@
             <property name="text">
              <string/>
             </property>
+            <property name="textFormat">
+             <enum>Qt::AutoText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>-1</number>
+            </property>
            </widget>
           </item>
          </layout>

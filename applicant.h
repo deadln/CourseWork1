@@ -18,8 +18,18 @@ class Applicant : public Person, public Vacancy
     QDate date;
 public:
     Applicant();
-    Applicant(QString p, QString e, unsigned int d, unsigned int m, unsigned int y, Status s);
+    Applicant(QString snm, QString nm, QString ptr, QDate bd, QString sx, QString edu, QString act,
+              QString vnm, QString vid,
+              QString p, QString e, unsigned int d, unsigned int m, unsigned int y, Status s);
     void setStatus(Status s);
+    QString getPhoneNumber() {return phone_number;}
+    QString getEmail() {return email;}
+    unsigned int getExpDays() {return e_days;}
+    unsigned int getExpMonth() {return e_months;}
+    unsigned int getExpYears() {return e_years;}
+    QString getStatus();
+    QDate getDateOfConsideration() {return date;}
+
 };
 
 #endif // APPLICANT_H
