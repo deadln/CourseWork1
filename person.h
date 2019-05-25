@@ -7,6 +7,7 @@
 
 class Person
 {
+protected:
     QString surname;
     QString name;
     QString patronimic;
@@ -17,13 +18,13 @@ class Person
 public:
     Person();
     Person(QString s, QString n, QString p, QDate b,QString se, QString e, QString a);
-    QString getSurname() {return surname; }
-    QString getName() {return name; }
-    QString getPatronimic() {return patronimic; }
-    QDate getbday() {return bday; }
-    QString getSex() {return sex; }
-    QString getEducation() {return education; }
-    QString getActivity() {return activity; }
+    QString getSurname() const {return surname; }
+    QString getName() const {return name; }
+    QString getPatronimic() const {return patronimic; }
+    QDate getbday() const {return bday; }
+    QString getSex() const {return sex; }
+    QString getEducation() const {return education; }
+    QString getActivity() const {return activity; }
 
 };
 

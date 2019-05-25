@@ -26,7 +26,6 @@ private slots:
 
 private:
     Ui::AddVacancy *ui;
-    //MainWindow *m;
 };
 
 #endif // ADDVACANCY_H

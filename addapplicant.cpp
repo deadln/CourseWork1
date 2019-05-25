@@ -35,13 +35,11 @@ void AddApplicant::getVacList(QMap<QString, Vacancy> m)
 
 void AddApplicant::on_buttonBox_accepted()
 {
-    qDebug() << VacList[ui->comboBox_2->currentText()].getVacancyName() <<
-             VacList[ui->comboBox_2->currentText()].getId();
     Applicant a(ui->lineEdit->text(), ui->lineEdit_2->text(), ui->lineEdit_3->text(), ui->dateEdit->date(),
                 ui->comboBox->currentText(), ui->lineEdit_4->text(),ui->lineEdit_5->text(),
                 VacList[ui->comboBox_2->currentText()].getVacancyName(), VacList[ui->comboBox_2->currentText()].getId(),
             ui->lineEdit_6->text(), ui->lineEdit_7->text(), ui->spinBox->value(), ui->spinBox_2->value(),
-            ui->spinBox_3->value(), CONSIDERATION);
+            ui->spinBox_3->value(), CONSIDERATION, QDate::currentDate());
 
     emit sendApplicant(a);
 
@@ -99,8 +97,6 @@ void AddApplicant::on_openFile_clicked()
             for(int i = 0;i < ui->comboBox_2->count();i++)
             {
                 ui->comboBox_2->setCurrentIndex(i);
-                //qDebug() << ui->comboBox_2->currentText();
-                //qDebug() << VacList[ui->comboBox_2->currentText()].getVacancyName() << " - " << vac;
                 if(VacList[ui->comboBox_2->currentText()].getVacancyName() == vac)
                     break;
             }

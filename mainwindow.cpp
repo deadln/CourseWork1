@@ -16,8 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QFile file(FILE_NAME);
     QDataStream stream(&file);
     file.open(QIODevice::ReadOnly);
-    stream >> vacancies;
-    //Заполнение списка в окне
+    stream >> applicants >> vacancies;
+    //Заполнение списков в окне
+    for(QMap<QString, Applicant>::const_iterator i = applicants.constBegin(); i != applicants.constEnd(); i++)
+    {
+        ui->listWidget->addItem(i.key());
+    }
     for(QMap<QString, Vacancy>::const_iterator i = vacancies.constBegin(); i != vacancies.constEnd(); i++)
     {
         ui->listWidget_2->addItem(i.key());
@@ -28,23 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sendVacList(QMap<QString, Vacancy>)),
             &addapplicant, SLOT(getVacList(QMap<QString, Vacancy>)));
     file.close();
-    //ТЕСТ
-    /*QFile testfile("test.bin");
-    QByteArray ba, ba1;
-    Vacancy v("яой", "1488"), v1;
-    QDataStream filestream(&testfile), bytestream_out(&ba, QIODevice::WriteOnly);
-    bytestream_out << v;
-    testfile.open(QIODevice::WriteOnly);
-    filestream << v;
-    testfile.close();
 
-    testfile.open(QIODevice::ReadOnly);
-    filestream >> v1;
-    //QDataStream bytestream_in(ba1);
-   // bytestream_in >> v1;
-    qDebug() << v1.getVacancyName() << ' ' << v1.getId();
-    testfile.close();*/
-    //ТЕСТ
 }
 
 MainWindow::~MainWindow()
@@ -59,7 +47,7 @@ inline void MainWindow::rewrite_data()
     QFile file(FILE_NAME);
     QDataStream stream(&file);
     file.open(QIODevice::WriteOnly);
-    stream << vacancies;
+    stream << applicants << vacancies;
     file.close();
 }
 
@@ -139,6 +127,7 @@ void MainWindow::addApp(Applicant a)
         }
     }
 
+    rewrite_data();
 }
 
 //НЕ УДАЛЯТЬ
@@ -191,9 +180,10 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
     Applicant a = applicants[current->text()];
     ui->label->setText("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " + a.getPatronimic() +
                          "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") + "\nПол: " + a.getSex() +
-                       "\nОбразование: " + a.getEducation() + "\nДеятельность: " + a.getSex() +
+                       "\nОбразование: " + a.getEducation() + "\nДеятельность: " + a.getActivity() +
                        "\nТелефон: " + a.getPhoneNumber() + "\nЭлектронная почта: " + a.getEmail() +
                        "\nТрудовой стаж: " + QString::number(a.getExpYears()) + " лет " +
                        QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
-                       " дней\nПретендуемая вакансия: " + a.getVacancyName());
+                       " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
+                       a.getDateOfConsideration().toString("dd.MM.yyyy"));
 }
