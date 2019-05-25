@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <cstdlib>
 #include <ctime>
+#include <QMessageBox>
 
 const QString FILE_NAME("data.bin");
 
@@ -186,4 +187,18 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
                        QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
                        " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
                        a.getDateOfConsideration().toString("dd.MM.yyyy"));
+}
+
+void MainWindow::on_NotByVac_clicked()
+{
+    Vacancy v = vacancies[ui->listWidget_2->currentItem()->text()];
+    for(QMap<QString, Applicant>::const_iterator i = applicants.constBegin(); i != applicants.constEnd(); i++)
+    {
+        if(i.value().getVacancyName() == v.getVacancyName())
+        {
+            QMessageBox(QMessageBox::Information, "Уведомление", QString("Кандидат %1 получил уведомление о "
+                                                                         "переподготовке по специальности %2")
+                        .arg(i.key()).arg(v.getVacancyName())).exec();
+        }
+    }
 }
