@@ -27,6 +27,24 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&addapplicant, SIGNAL(sendApplicant(Applicant)), this, SLOT(addApp(Applicant)));
     connect(this, SIGNAL(sendVacList(QMap<QString, Vacancy>)),
             &addapplicant, SLOT(getVacList(QMap<QString, Vacancy>)));
+    file.close();
+    //ТЕСТ
+    /*QFile testfile("test.bin");
+    QByteArray ba, ba1;
+    Vacancy v("яой", "1488"), v1;
+    QDataStream filestream(&testfile), bytestream_out(&ba, QIODevice::WriteOnly);
+    bytestream_out << v;
+    testfile.open(QIODevice::WriteOnly);
+    filestream << v;
+    testfile.close();
+
+    testfile.open(QIODevice::ReadOnly);
+    filestream >> v1;
+    //QDataStream bytestream_in(ba1);
+   // bytestream_in >> v1;
+    qDebug() << v1.getVacancyName() << ' ' << v1.getId();
+    testfile.close();*/
+    //ТЕСТ
 }
 
 MainWindow::~MainWindow()
@@ -42,6 +60,7 @@ inline void MainWindow::rewrite_data()
     QDataStream stream(&file);
     file.open(QIODevice::WriteOnly);
     stream << vacancies;
+    file.close();
 }
 
 void MainWindow::on_action_triggered()

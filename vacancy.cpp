@@ -6,7 +6,7 @@ QDataStream& operator<<(QDataStream &d, const Vacancy &v)
     return d;
 }
 
-QDataStream& operator>>( QDataStream& d, Vacancy v)
+QDataStream& operator>>( QDataStream& d,  Vacancy &v)
 {
     d >> v.name >> v.id;
     return d;

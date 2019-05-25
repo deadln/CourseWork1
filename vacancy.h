@@ -19,7 +19,7 @@ public:
     QString getId(){return id;}
 
     friend QDataStream& operator<<(QDataStream &d, const Vacancy &v);
-    friend QDataStream& operator>>( QDataStream& d, Vacancy v);
+    friend QDataStream& operator>>( QDataStream& d, Vacancy &v);
 };
 
 #endif // VACANCY_H

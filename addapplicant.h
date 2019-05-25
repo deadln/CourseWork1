@@ -28,6 +28,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_openFile_clicked();
+
 private:
     Ui::AddApplicant *ui;
     QMap<QString, Vacancy> VacList;
