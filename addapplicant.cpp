@@ -77,6 +77,8 @@ void AddApplicant::on_openFile_clicked()
 {
     QTextCodec *codec = QTextCodec::codecForName("windows-1251");
     QFile file(QFileDialog::getOpenFileName(this, "Открыть резюме", "", "*.txt"));
+    if(file.fileName() == "")
+        return;
     file.open(QIODevice::ReadOnly);
             ui->lineEdit->setText(codec->toUnicode(file.readLine()));
             ui->lineEdit_2->setText(codec->toUnicode(file.readLine()));

@@ -48,6 +48,8 @@ private slots:
 
     void on_NotByVac_clicked();
 
+    void on_delApp_clicked();
+
 private:
     Ui::MainWindow *ui;
 

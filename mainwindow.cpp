@@ -202,3 +202,22 @@ void MainWindow::on_NotByVac_clicked()
         }
     }
 }
+
+void MainWindow::on_delApp_clicked()
+{
+    if(ui->listWidget->count() == 0)
+        return;
+    if(ui->listWidget->count() == 1)
+    {
+        applicants.clear();
+        ui->listWidget->clear();
+        return;
+    }
+    if(ui->listWidget->currentItem() != nullptr)
+    {
+        applicants.remove(ui->listWidget->currentItem()->text());
+        ui->listWidget->takeItem(ui->listWidget->currentRow());
+    }
+
+    rewrite_data();
+}
