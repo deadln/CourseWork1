@@ -67,6 +67,23 @@ inline void MainWindow::rewrite_data()
     file_2.close();
 }
 
+//Форматирование строки для нормального отображения
+QString MainWindow::format_string(QString s)
+{
+    for(int i = 0, check = 0;i < s.length(); i++, check++)
+    {
+        if(check == 48)
+        {
+            s.insert(i,'\n');
+            check = 0;
+        }
+        else if(s[i] == '\n')
+            check = 0;
+    }
+    return s;
+}
+
+//Выход через меню
 void MainWindow::on_action_triggered()
 {
     QApplication::quit(); //Выход
@@ -162,7 +179,8 @@ void MainWindow::on_listWidget_2_currentItemChanged(QListWidgetItem *current, QL
         return;
     }
     Vacancy v = vacancies[current->text()];
-    ui->label_2->setText("Специальность вакансии: " + v.getVacancyName() + "\nШифр специальности: " + v.getId());
+    ui->label_2->setText(format_string("Специальность вакансии: " + v.getVacancyName() + "\nШифр специальности: " +
+                                       v.getId()));
 }
 
 //Удаление вакансии
@@ -194,14 +212,16 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
         return;
     }
     Applicant a = applicants[current->text()];
-    ui->label->setText("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " + a.getPatronimic() +
-                         "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") + "\nПол: " + a.getSex() +
-                       "\nОбразование: " + a.getEducation() + "\nДеятельность: " + a.getActivity() +
-                       "\nТелефон: " + a.getPhoneNumber() + "\nЭлектронная почта: " + a.getEmail() +
-                       "\nТрудовой стаж: " + QString::number(a.getExpYears()) + " лет " +
-                       QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
-                       " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
-                       a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " + a.getStatus());
+    ui->label->setText(format_string("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " +
+                                     a.getPatronimic() + "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") +
+                                     "\nПол: " + a.getSex() + "\nОбразование: " + a.getEducation() +
+                                     "\nДеятельность: " + a.getActivity() + "\nТелефон: " + a.getPhoneNumber() +
+                                     "\nЭлектронная почта: " + a.getEmail() + "\nТрудовой стаж: " +
+                                     QString::number(a.getExpYears()) + " лет " + QString::number(a.getExpMonth()) +
+                                     " месяцев " + QString::number(a.getExpDays()) + " дней\nПретендуемая вакансия: " +
+                                     a.getVacancyName() + "\nДата подачи кандидатуры: " +
+                                     a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " +
+                                     a.getStatus()));
 }
 
 //Уведомление о переподготовке по специальности
@@ -334,14 +354,17 @@ void MainWindow::on_listWidget_3_currentItemChanged(QListWidgetItem *current, QL
         return;
     }
     Applicant a = archive[current->text()];
-    ui->label_3->setText("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " + a.getPatronimic() +
-                         "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") + "\nПол: " + a.getSex() +
-                       "\nОбразование: " + a.getEducation() + "\nДеятельность: " + a.getActivity() +
-                       "\nТелефон: " + a.getPhoneNumber() + "\nЭлектронная почта: " + a.getEmail() +
-                       "\nТрудовой стаж: " + QString::number(a.getExpYears()) + " лет " +
-                       QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
-                       " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
-                       a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " + a.getStatus());
+    ui->label_3->setText(format_string("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " +
+                                       a.getPatronimic() + "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") +
+                                       "\nПол: " + a.getSex() + "\nОбразование: " + a.getEducation() +
+                                       "\nДеятельность: " + a.getActivity() + "\nТелефон: " + a.getPhoneNumber() +
+                                       "\nЭлектронная почта: " + a.getEmail() + "\nТрудовой стаж: " +
+                                       QString::number(a.getExpYears()) + " лет " + QString::number(a.getExpMonth()) +
+                                       " месяцев " + QString::number(a.getExpDays()) +
+                                       " дней\nПретендуемая вакансия: " + a.getVacancyName() +
+                                       "\nДата подачи кандидатуры: " +
+                                       a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " +
+                                       a.getStatus()));
 }
 
 //Удаление записи из архива
@@ -387,6 +410,7 @@ void MainWindow::on_DelAc_clicked()
     rewrite_data();
 }
 
+//Удаление отклонённых кандидатов
 void MainWindow::on_DelDec_clicked()
 {
     for(int i = 0;i < ui->listWidget_3->count(); i++)

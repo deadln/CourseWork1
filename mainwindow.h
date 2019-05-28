@@ -75,6 +75,8 @@ private:
     QMap<QString , Applicant> applicants;
     QMap<QString , Vacancy> vacancies;
     QMap<QString , Applicant> archive;
+
+    QString format_string(QString s);
 };
 
 #endif // MAINWINDOW_H
