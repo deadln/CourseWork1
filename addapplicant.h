@@ -33,6 +33,8 @@ private slots:
 private:
     Ui::AddApplicant *ui;
     QMap<QString, Vacancy> VacList;
+
+    QByteArray del_n(QByteArray s);
 };
 
 #endif // ADDAPPLICANT_H

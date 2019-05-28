@@ -50,6 +50,22 @@ private slots:
 
     void on_delApp_clicked();
 
+    void on_notifyApp_clicked();
+
+    void on_AcApp_clicked();
+
+    void on_DecApp_clicked();
+
+    void on_listWidget_3_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
+    void on_DelArch_clicked();
+
+    void on_DelAllArch_clicked();
+
+    void on_DelAc_clicked();
+
+    void on_DelDec_clicked();
+
 private:
     Ui::MainWindow *ui;
 

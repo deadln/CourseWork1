@@ -29,7 +29,7 @@ public:
     unsigned int getExpDays() const {return e_days;}
     unsigned int getExpMonth() const {return e_months;}
     unsigned int getExpYears() const {return e_years;}
-    QString getStatus();
+    QString getStatus() const;
     QDate getDateOfConsideration() const {return date;}
 
     friend QDataStream& operator<<(QDataStream &d, const Applicant &a);

@@ -7,6 +7,7 @@
 #include <QMessageBox>
 
 const QString FILE_NAME("data.bin");
+const QString FILE_NAME_2("archive.bin");
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,10 +15,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //Загрузка данных из файла
-    QFile file(FILE_NAME);
-    QDataStream stream(&file);
+    QFile file(FILE_NAME), file_2(FILE_NAME_2);
+    QDataStream stream(&file), stream_2(&file_2);
     file.open(QIODevice::ReadOnly);
     stream >> applicants >> vacancies;
+    file.close();
+
+    file_2.open(QIODevice::ReadOnly);
+    stream_2 >> archive;
+    file_2.close();
+
     //Заполнение списков в окне
     for(QMap<QString, Applicant>::const_iterator i = applicants.constBegin(); i != applicants.constEnd(); i++)
     {
@@ -27,12 +34,16 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         ui->listWidget_2->addItem(i.key());
     }
+    for(QMap<QString, Applicant>::const_iterator i = archive.constBegin(); i != archive.constEnd(); i++)
+    {
+        ui->listWidget_3->addItem(i.key());
+    }
+
 
     connect(&addvacancy, SIGNAL(sendVacancy(Vacancy)), this, SLOT(addVac(Vacancy)));
     connect(&addapplicant, SIGNAL(sendApplicant(Applicant)), this, SLOT(addApp(Applicant)));
     connect(this, SIGNAL(sendVacList(QMap<QString, Vacancy>)),
             &addapplicant, SLOT(getVacList(QMap<QString, Vacancy>)));
-    file.close();
 
 }
 
@@ -45,11 +56,15 @@ MainWindow::~MainWindow()
 //Перезапись данных
 inline void MainWindow::rewrite_data()
 {
-    QFile file(FILE_NAME);
-    QDataStream stream(&file);
+    QFile file(FILE_NAME), file_2(FILE_NAME_2);
+    QDataStream stream(&file), stream_2(&file_2);
     file.open(QIODevice::WriteOnly);
     stream << applicants << vacancies;
     file.close();
+
+    file_2.open(QIODevice::WriteOnly);
+    stream_2 << archive;
+    file_2.close();
 }
 
 void MainWindow::on_action_triggered()
@@ -186,23 +201,31 @@ void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QLis
                        "\nТрудовой стаж: " + QString::number(a.getExpYears()) + " лет " +
                        QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
                        " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
-                       a.getDateOfConsideration().toString("dd.MM.yyyy"));
+                       a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " + a.getStatus());
 }
 
+//Уведомление о переподготовке по специальности
 void MainWindow::on_NotByVac_clicked()
 {
-    Vacancy v = vacancies[ui->listWidget_2->currentItem()->text()];
-    for(QMap<QString, Applicant>::const_iterator i = applicants.constBegin(); i != applicants.constEnd(); i++)
+    if(ui->listWidget_2->currentItem() != nullptr)
     {
-        if(i.value().getVacancyName() == v.getVacancyName())
+        Vacancy v = vacancies[ui->listWidget_2->currentItem()->text()];
+        for(QMap<QString, Applicant>::const_iterator i = applicants.constBegin(); i != applicants.constEnd(); i++)
         {
-            QMessageBox(QMessageBox::Information, "Уведомление", QString("Кандидат %1 получил уведомление о "
-                                                                         "переподготовке по специальности %2")
-                        .arg(i.key()).arg(v.getVacancyName())).exec();
+            if(i.value().getVacancyName() == v.getVacancyName())
+           {
+               QMessageBox(QMessageBox::Information, "Уведомление", QString("Кандидат %1 получил уведомление о "
+                                                                         "переподготовке по специальности %2\n"
+                                                                         "по электронной почте: %3\n"
+                                                                         "по телефону: %4")
+                        .arg(i.key()).arg(v.getVacancyName()).arg(i.value().getEmail()).arg(i.value().getPhoneNumber()))
+                    .exec();
+            }
         }
     }
 }
 
+//Удаление кандидата
 void MainWindow::on_delApp_clicked()
 {
     if(ui->listWidget->count() == 0)
@@ -219,5 +242,161 @@ void MainWindow::on_delApp_clicked()
         ui->listWidget->takeItem(ui->listWidget->currentRow());
     }
 
+    rewrite_data();
+}
+
+//Уведомление о переподготовке конкретного кандидата
+void MainWindow::on_notifyApp_clicked()
+{
+    if(ui->listWidget->currentItem() != nullptr)
+    {
+        Applicant a = applicants[ui->listWidget->currentItem()->text()];
+        QMessageBox(QMessageBox::Information, "Уведомление", QString("Кандидат %1 получил уведомление о "
+                                                                     "переподготовке по специальности %2\n"
+                                                                     "по электронной почте: %3\n"
+                                                                     "по телефону: %4")
+                    .arg(ui->listWidget->currentItem()->text()).arg(a.getVacancyName()).arg(a.getEmail())
+                    .arg(a.getPhoneNumber())).exec();
+    }
+}
+
+//Принять кандидата
+void MainWindow::on_AcApp_clicked()
+{
+    if(ui->listWidget->currentItem() != nullptr)
+    {
+        Applicant a = applicants[ui->listWidget->currentItem()->text()];
+        bool b = false;
+        for(QMap<QString, Vacancy>::const_iterator i = vacancies.constBegin(); i != vacancies.constEnd(); i++)
+        {
+            if(a.getVacancyName() == i.value().getVacancyName() && a.getId() == i.value().getId())
+            {
+                for(int j = 0;j < ui->listWidget_2->count(); j++)
+                {
+                    if(ui->listWidget_2->item(j)->text() == i.key())
+                    {
+                        ui->listWidget_2->takeItem(j);
+                        break;
+                    }
+
+                }
+                qDebug() << i.key();
+                vacancies.remove(i.key());
+                b = true;
+                break;
+            }
+        }
+        if(!b)
+        {
+            QMessageBox(QMessageBox::Critical, "Ошибка", QString("Кандидат %1 не может быть добавлен - вакансия не "
+                                                                      "существует")
+                        .arg(ui->listWidget->currentItem()->text())).exec();
+            return;
+        }
+        a.setStatus(Status::APPLIED);
+        archive[ui->listWidget->currentItem()->text()] = a;
+        //Вывод в архиве
+        ui->listWidget_3->addItem(ui->listWidget->currentItem()->text());
+
+        applicants.remove(ui->listWidget->currentItem()->text());
+        ui->listWidget->takeItem(ui->listWidget->currentRow());
+
+
+    }
+
+    rewrite_data();
+}
+
+//Отказать кандидату
+void MainWindow::on_DecApp_clicked()
+{
+    if(ui->listWidget->currentItem() != nullptr)
+    {
+        Applicant a = applicants[ui->listWidget->currentItem()->text()];
+        a.setStatus(Status::DENIED);
+        archive[ui->listWidget->currentItem()->text()] = a;
+        //Вывод в архиве
+        ui->listWidget_3->addItem(ui->listWidget->currentItem()->text());
+
+        applicants.remove(ui->listWidget->currentItem()->text());
+        ui->listWidget->takeItem(ui->listWidget->currentRow());
+    }
+
+    rewrite_data();
+}
+
+//Вывод кандидатов в архиве
+void MainWindow::on_listWidget_3_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    if(current == nullptr)
+    {
+        ui->label_3->setText("");
+        return;
+    }
+    Applicant a = archive[current->text()];
+    ui->label_3->setText("Фамилия: " + a.getSurname() + "\nИмя: " + a.getName() + "\nОтчество: " + a.getPatronimic() +
+                         "\nДата рождения: " + a.getbday().toString("dd.MM.yyyy") + "\nПол: " + a.getSex() +
+                       "\nОбразование: " + a.getEducation() + "\nДеятельность: " + a.getActivity() +
+                       "\nТелефон: " + a.getPhoneNumber() + "\nЭлектронная почта: " + a.getEmail() +
+                       "\nТрудовой стаж: " + QString::number(a.getExpYears()) + " лет " +
+                       QString::number(a.getExpMonth()) + " месяцев " + QString::number(a.getExpDays()) +
+                       " дней\nПретендуемая вакансия: " + a.getVacancyName() + "\nДата подачи кандидатуры: " +
+                       a.getDateOfConsideration().toString("dd.MM.yyyy") + "\nСтатус кандидата: " + a.getStatus());
+}
+
+//Удаление записи из архива
+void MainWindow::on_DelArch_clicked()
+{
+    if(ui->listWidget_3->count() == 0)
+        return;
+    if(ui->listWidget_3->count() == 1)
+    {
+        archive.clear();
+        ui->listWidget_3->clear();
+        return;
+    }
+    if(ui->listWidget_3->currentItem() != nullptr)
+    {
+        archive.remove(ui->listWidget_3->currentItem()->text());
+        ui->listWidget_3->takeItem(ui->listWidget_3->currentRow());
+    }
+
+    rewrite_data();
+}
+
+//Удаление всех записей из архива
+void MainWindow::on_DelAllArch_clicked()
+{
+    archive.clear();
+    ui->listWidget_3->clear();
+    rewrite_data();
+}
+
+//Удаление принятых кандидатов
+void MainWindow::on_DelAc_clicked()
+{
+    for(int i = 0;i < ui->listWidget_3->count(); i++)
+    {
+        if(archive[ui->listWidget_3->item(i)->text()].getStatus() == "Принят")
+        {
+            archive.remove(ui->listWidget_3->item(i)->text());
+            ui->listWidget_3->takeItem(i);
+            i--;
+        }
+    }
+    rewrite_data();
+}
+
+void MainWindow::on_DelDec_clicked()
+{
+    for(int i = 0;i < ui->listWidget_3->count(); i++)
+    {
+        if(archive[ui->listWidget_3->item(i)->text()].getStatus() == "Отклонён")
+        {
+            archive.remove(ui->listWidget_3->item(i)->text());
+            ui->listWidget_3->takeItem(i);
+            i--;
+        }
+    }
     rewrite_data();
 }

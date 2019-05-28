@@ -32,7 +32,7 @@ void Applicant::setStatus(Status s)
     status = s;
 }
 
-QString Applicant::getStatus()
+QString Applicant::getStatus() const
 {
     switch (status)
     {

@@ -75,32 +75,40 @@ void AddApplicant::on_buttonBox_rejected()
 
 void AddApplicant::on_openFile_clicked()
 {
+    QByteArray s;
     QTextCodec *codec = QTextCodec::codecForName("windows-1251");
     QFile file(QFileDialog::getOpenFileName(this, "Открыть резюме", "", "*.txt"));
     if(file.fileName() == "")
         return;
     file.open(QIODevice::ReadOnly);
-            ui->lineEdit->setText(codec->toUnicode(file.readLine()));
-            ui->lineEdit_2->setText(codec->toUnicode(file.readLine()));
-            ui->lineEdit_3->setText(codec->toUnicode(file.readLine()));
-            ui->dateEdit->setDate(QDate::fromString(codec->toUnicode(file.readLine()), "dd.MM.yyyy"));
-            if(codec->toUnicode(file.readLine()) == "Женский")
-                ui->comboBox->setCurrentIndex(1);
-            else
-                ui->comboBox->setCurrentIndex(0);
-            ui->lineEdit_4->setText(codec->toUnicode(file.readLine()));
-            ui->lineEdit_5->setText(codec->toUnicode(file.readLine()));
-            ui->lineEdit_6->setText(codec->toUnicode(file.readLine()));
-            ui->lineEdit_7->setText(codec->toUnicode(file.readLine()));
-            ui->spinBox->setValue(file.readLine().toInt());
-            ui->spinBox_2->setValue(file.readLine().toInt());
-            ui->spinBox_3->setValue(file.readLine().toInt());
-            QString vac = codec->toUnicode(file.readLine());
-            for(int i = 0;i < ui->comboBox_2->count();i++)
-            {
-                ui->comboBox_2->setCurrentIndex(i);
-                if(VacList[ui->comboBox_2->currentText()].getVacancyName() == vac)
-                    break;
-            }
+    ui->lineEdit->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->lineEdit_2->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->lineEdit_3->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->dateEdit->setDate(QDate::fromString(del_n(file.readLine()), "dd.MM.yyyy"));
+    if(codec->toUnicode(del_n(file.readLine())) == "Женский")
+        ui->comboBox->setCurrentIndex(1);
+    else
+        ui->comboBox->setCurrentIndex(0);
+    ui->lineEdit_4->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->lineEdit_5->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->lineEdit_6->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->lineEdit_7->setText(codec->toUnicode(del_n(file.readLine())));
+    ui->spinBox->setValue(file.readLine().toInt());
+    ui->spinBox_2->setValue(file.readLine().toInt());
+    ui->spinBox_3->setValue(file.readLine().toInt());
+    QString vac = codec->toUnicode(file.readLine());
+    for(int i = 0;i < ui->comboBox_2->count();i++)
+    {
+        ui->comboBox_2->setCurrentIndex(i);
+        if(VacList[ui->comboBox_2->currentText()].getVacancyName() == vac)
+            break;
+    }
     file.close();
+}
+
+QByteArray AddApplicant::del_n(QByteArray s)
+{
+    s.replace('\n',"");
+    s.replace('\r',"");
+    return s;
 }
