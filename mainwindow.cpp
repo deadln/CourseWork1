@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     //Загрузка данных из файла
     QFile file(FILE_NAME), file_2(FILE_NAME_2);
     QDataStream stream(&file), stream_2(&file_2);
