@@ -301,7 +301,6 @@ void MainWindow::on_AcApp_clicked()
                     }
 
                 }
-                qDebug() << i.key();
                 vacancies.remove(i.key());
                 b = true;
                 break;

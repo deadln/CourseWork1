@@ -77,6 +77,6 @@ private:
     QMap<QString , Applicant> archive;
 
     QString format_string(QString s);
-};
+};//19
 
 #endif // MAINWINDOW_H
