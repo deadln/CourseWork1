@@ -27,11 +27,13 @@ Applicant::Applicant(QString snm, QString nm, QString ptr, QDate bd, QString sx,
     date = dt;
 }
 
+//Изменить статус
 void Applicant::setStatus(Status s)
 {
     status = s;
 }
 
+//Получить статус
 QString Applicant::getStatus() const
 {
     switch (status)

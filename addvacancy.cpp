@@ -14,12 +14,7 @@ AddVacancy::~AddVacancy()
     delete ui;
 }
 
-void AddVacancy::on_buttonBox_rejected()
-{
-    ui->lineEdit->setText("");
-    ui->lineEdit_2->setText("");
-}
-
+//Кнопка ОК
 void AddVacancy::on_buttonBox_accepted()
 {
     Vacancy v(ui->lineEdit->text(), ui->lineEdit_2->text());
@@ -28,4 +23,13 @@ void AddVacancy::on_buttonBox_accepted()
     ui->lineEdit_2->setText("");
 
 }
+
+//Кнопка Отмена
+void AddVacancy::on_buttonBox_rejected()
+{
+    ui->lineEdit->setText("");
+    ui->lineEdit_2->setText("");
+}
+
+
 

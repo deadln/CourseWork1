@@ -22,6 +22,7 @@ AddApplicant::~AddApplicant()
     delete ui;
 }
 
+//Получение списка вакансий
 void AddApplicant::getVacList(QMap<QString, Vacancy> m)
 {
     ui->comboBox_2->clear();
@@ -33,13 +34,14 @@ void AddApplicant::getVacList(QMap<QString, Vacancy> m)
     }
 }
 
+//Кнопка Ok
 void AddApplicant::on_buttonBox_accepted()
 {
     Applicant a(ui->lineEdit->text(), ui->lineEdit_2->text(), ui->lineEdit_3->text(), ui->dateEdit->date(),
                 ui->comboBox->currentText(), ui->lineEdit_4->text(),ui->lineEdit_5->text(),
                 VacList[ui->comboBox_2->currentText()].getVacancyName(), VacList[ui->comboBox_2->currentText()].getId(),
-            ui->lineEdit_6->text(), ui->lineEdit_7->text(), ui->spinBox->value(), ui->spinBox_2->value(),
-            ui->spinBox_3->value(), CONSIDERATION, QDate::currentDate());
+            ui->lineEdit_6->text(), ui->lineEdit_7->text(), ui->spinBox_3->value(), ui->spinBox_2->value(),
+            ui->spinBox->value(), CONSIDERATION, QDate::currentDate());
 
     emit sendApplicant(a);
 
@@ -57,6 +59,7 @@ void AddApplicant::on_buttonBox_accepted()
     ui->spinBox_3->setValue(0);
 }
 
+//Кнопка Отмена
 void AddApplicant::on_buttonBox_rejected()
 {
     ui->lineEdit->setText("");
@@ -73,6 +76,7 @@ void AddApplicant::on_buttonBox_rejected()
     ui->spinBox_3->setValue(0);
 }
 
+//Открытие файла
 void AddApplicant::on_openFile_clicked()
 {
     QByteArray s;
